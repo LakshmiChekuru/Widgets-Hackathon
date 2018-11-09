@@ -20,15 +20,8 @@ class QnA extends PolymerElement {
       </style>
       <h2>May I help you?</h2>
       <div id="div1">
-      Q:<input type="text" id="Q1"></input> <input type="button" on-click="_buttonClick" value="Send"></input>
-      <div id="A1"></div>      
-      </div>
-
-
-
-      <div id="template" hidden$="{{hide}}">
-      Q:<input type="text" id="Q1"></input> <input type="button" on-click="_buttonClick" value="Send"></input>
-      <div></div>      
+      Q:<input type="text" id="Question"></input> <input type="button" on-click="_buttonClick" value="Send"></input>
+      <div id="Answer"></div>      
       </div>
     `;
   }
@@ -58,17 +51,13 @@ class QnA extends PolymerElement {
     };
   }
   _buttonClick(){    
-    const container=this.shadowRoot.querySelector('#' + 'A'+this.count);
+    const container=this.shadowRoot.querySelector('#Answer');
     if(container)
     {   
-      this._getAnswer(this.shadowRoot.querySelector('#' + 'Q'+this.count).value);
+      this._getAnswer(this.shadowRoot.querySelector('#Question').value);
       container.innerHTML=this.answer;    
-    } 
+    }    
     
-    var cloned=this._cloneTemplate();
-    console.log("cloned count=" +cloned.childNodes.count);
-    const lastDIV=this.shadowRoot.querySelector('#' + 'div'+this.count);
-    lastDIV.parentNode.appendChild(cloned);
   }
 
 
@@ -101,7 +90,7 @@ class QnA extends PolymerElement {
         .success((response, xhr) => {
           resolve(response);
           this.answer=response.answers[0].answer;
-          this.shadowRoot.querySelector('#' + 'A'+this.count).innerHTML=this.answer;
+          this.shadowRoot.querySelector('#Answer').innerHTML=this.answer;
         })
         .error((err, xhr) => {
           // Define Error
@@ -119,55 +108,19 @@ class QnA extends PolymerElement {
     var header = {  'Accept': 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': 'EndpointKey 59b657f7-5084-40be-ab5a-6dfba8fe531e'};
-    var data = {'question' : 'which bank supported ?'};
+    var data = {'question' : question};
 
     this._sendRequest(url, urlType, data,header)
       .then((response) => {        
-        if(response)
-        //answer= response.answers[0].answer;
-        this.answer = response.answers[0].answer;
-        //resolve(response);
-      
-       // Define response
-       
-      },function (success){
-        //answer= response.answers[0].answer;
+        if(response)        
+        this.answer = response.answers[0].answer;       
+      },function (success){        
         this.answer = response.answers[0].answer;
         resolve(response);
       }, function (error) { return; });
       
   }
 
-  _cloneTemplate(){
-    const container = this.shadowRoot.querySelector('#template');
-    var ret = container.cloneNode();
-    var lightDom;
-    var childNodes;
-    var nextCount=this.count+1;
-    //ret.attributes.setNamedItem("id").value="div"+nextCount;
-    console.log(ret.attributes.getNamedItem("id").value);
-    //lightDom = Polymer.dom(ret);
-    childNodes = container.childNodes;
-    for (var i = 0; i < childNodes.length; i++) {      
-      ret.appendChild(childNodes[i].cloneNode());
-    }    
-    return ret;
-  }
-
-  
-
-
-  _createAnswerData(htmlId) {
-    const container = this.shadowRoot.querySelector('#' + htmlId);
-    if (container) {
-      
-        let option = document.createElement('option');
-        option.textContent = item;
-        option.value = item;
-        option.selected = optionRangeSelected ? this._setSelected(this.opportunityrange, item) : this._setSelected(this.opportunityfilter, item);
-        container.appendChild(option);      
-    }
-  }
 }
 
 window.customElements.define('qna-widget', QnA);
