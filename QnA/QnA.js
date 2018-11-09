@@ -20,14 +20,14 @@ class QnA extends PolymerElement {
       </style>
       <h2>May I help you?</h2>
       <div id="div1">
-      Q:<input type="text" id="Q1" value=[[prop1]]></input> <input type="button" on-click="_buttonClick" value="Send"></input>
+      Q:<input type="text" id="Q1"></input> <input type="button" on-click="_buttonClick" value="Send"></input>
       <div id="A1"></div>      
       </div>
 
 
 
       <div id="template" hidden$="{{hide}}">
-      Q:<input type="text" id="Q1" value=[[prop1]]></input> <input type="button" on-click="_buttonClick" value="Send"></input>
+      Q:<input type="text" id="Q1"></input> <input type="button" on-click="_buttonClick" value="Send"></input>
       <div></div>      
       </div>
     `;
@@ -52,17 +52,16 @@ class QnA extends PolymerElement {
       },
       answer:{
         type:String,
-        value:'default'
+        value:''
       }
 
     };
   }
   _buttonClick(){    
-    this.answer="abcd efgh ijk lmn opq rst uvw";   
     const container=this.shadowRoot.querySelector('#' + 'A'+this.count);
     if(container)
     {   
-      this.answer= this._getAnswer(this.shadowRoot.querySelector('#' + 'Q'+this.count).value);
+      this._getAnswer(this.shadowRoot.querySelector('#' + 'Q'+this.count).value);
       container.innerHTML=this.answer;    
     } 
     
@@ -101,6 +100,8 @@ class QnA extends PolymerElement {
       atomic.ajax(options)
         .success((response, xhr) => {
           resolve(response);
+          this.answer=response.answers[0].answer;
+          this.shadowRoot.querySelector('#' + 'A'+this.count).innerHTML=this.answer;
         })
         .error((err, xhr) => {
           // Define Error
@@ -113,6 +114,7 @@ class QnA extends PolymerElement {
 
   _getAnswer(question) {
     var url = this._apiUrl;
+    var answer="";
     var urlType = "POST";
     var header = {  'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -120,10 +122,20 @@ class QnA extends PolymerElement {
     var data = {'question' : 'which bank supported ?'};
 
     this._sendRequest(url, urlType, data,header)
-      .then((response) => {
+      .then((response) => {        
+        if(response)
+        //answer= response.answers[0].answer;
+        this.answer = response.answers[0].answer;
+        //resolve(response);
+      
        // Define response
-       var x="abc";
+       
+      },function (success){
+        //answer= response.answers[0].answer;
+        this.answer = response.answers[0].answer;
+        resolve(response);
       }, function (error) { return; });
+      
   }
 
   _cloneTemplate(){
