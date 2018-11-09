@@ -13,15 +13,23 @@ import '../jslibs/ajax/ajax.js';
 class QnA extends PolymerElement {
   static get template() {
     return html`
-      <style>
-        :host {
-          display: block;
-        }
-      </style>
-      <h2>May I help you?</h2>
-      <div id="div1">
-      Q:<input type="text" id="Question"></input> <input type="button" on-click="_buttonClick" value="Send"></input>
-      <div id="Answer"></div>      
+    <link rel="stylesheet" href="../QnA/QnA.css">
+      <div class="row">
+        <div class="col-sm-3 col-sm-offset-4 frame">
+          <ul id="MessageList"></ul>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-3 col-sm-offset-4 frameinput">
+          <div>
+            <div class="msj-rta macro" style="margin:auto">                        
+                <div class="text text-r" style="background:whitesmoke !important">
+                    <input class="mytext" placeholder="May I help you?" id="question"/>
+                </div> 
+            </div>
+            <input type="button" on-click="_questionButtonClick" value="Send"></input>
+          </div>
+        </div>
       </div>
     `;
   }
@@ -50,17 +58,7 @@ class QnA extends PolymerElement {
 
     };
   }
-  _buttonClick(){    
-    const container=this.shadowRoot.querySelector('#Answer');
-    if(container)
-    {   
-      this._getAnswer(this.shadowRoot.querySelector('#Question').value);
-      container.innerHTML=this.answer;    
-    }    
-    
-  }
-
-
+  
   constructor() {
     super();
     this._init();
@@ -68,6 +66,11 @@ class QnA extends PolymerElement {
 
   _init() {
     this._apiUrl = 'https://workspaceqna.azurewebsites.net/qnamaker/knowledgebases/e4099bc6-9135-47d6-bb73-8a348b302ab1/generateAnswer/';
+  }
+
+  _questionButtonClick(){
+    this._insertChat("user",this.shadowRoot.querySelector('#question').value,5);
+    this._getAnswer(this.shadowRoot.querySelector('#question').value);
   }
   
   _sendRequest(url, urlType, data, header) {
@@ -90,7 +93,7 @@ class QnA extends PolymerElement {
         .success((response, xhr) => {
           resolve(response);
           this.answer=response.answers[0].answer;
-          this.shadowRoot.querySelector('#Answer').innerHTML=this.answer;
+          this._insertChat("QnAbot",this.answer,5);
         })
         .error((err, xhr) => {
           // Define Error
@@ -100,6 +103,17 @@ class QnA extends PolymerElement {
         });
     });
   }
+
+  _formatAMPM(date) {
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? 'PM' : 'AM';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+    return strTime;
+}  
 
   _getAnswer(question) {
     var url = this._apiUrl;
@@ -112,15 +126,57 @@ class QnA extends PolymerElement {
 
     this._sendRequest(url, urlType, data,header)
       .then((response) => {        
-        if(response)        
-        this.answer = response.answers[0].answer;       
-      },function (success){        
+        if(response)
+        this.answer = response.answers[0].answer;
+      },function (success){
         this.answer = response.answers[0].answer;
         resolve(response);
       }, function (error) { return; });
       
   }
 
+  _insertChat(who, text){
+    
+    var control = '';
+    var date = this._formatAMPM(new Date());
+    
+    var textnode;
+    // Date Node
+    var smallNode =  document.createElement("small");                   
+    textnode = document.createTextNode(date);
+    smallNode.appendChild(textnode);   
+    var dateNode =  document.createElement("p");                   
+    dateNode.appendChild(smallNode); 
+    // Answer Node
+    var answerNode =  document.createElement("p");                   
+    textnode = document.createTextNode(text);
+    answerNode.appendChild(textnode);  
+    // Wrapper Div Node 
+    var answerChildDivNode =  document.createElement("div");
+    answerChildDivNode.setAttribute("class","text text-r"); 
+    answerChildDivNode.appendChild(answerNode);   
+    if (who == "user"){
+      var replyChildDivNode =  document.createElement("div");
+      replyChildDivNode.setAttribute("class","avatar"); 
+      replyChildDivNode.setAttribute("style","padding:0px 0px 0px 10px !important"); 
+      replyChildDivNode.appendChild(answerChildDivNode); 
+      var answerParentDivNode =  document.createElement("div");
+      answerParentDivNode.setAttribute("class","msj-rta macro"); 
+      answerParentDivNode.appendChild(replyChildDivNode);
+    }
+    else {
+      var answerParentDivNode =  document.createElement("div");
+      answerParentDivNode.setAttribute("class","msj-rta macro"); 
+      answerParentDivNode.appendChild(answerChildDivNode);
+    }
+      
+    // li Node
+    var node = document.createElement("li");
+    node.setAttribute("width","100%"); 
+    node.appendChild(answerParentDivNode);   
+
+    this.shadowRoot.querySelector('#MessageList').appendChild(node);
+  }
 }
 
 window.customElements.define('qna-widget', QnA);
