@@ -2,6 +2,8 @@ import {html, PolymerElement} from '@polymer/polymer/polymer-element.js';
 // internal libs
 import '../jslibs/ajax/ajax.js';
 
+import './QnA-css';
+
 /**
  * `demo-widget`
  * Getting to know polymer
@@ -13,7 +15,7 @@ import '../jslibs/ajax/ajax.js';
 class QnA extends PolymerElement {
   static get template() {
     return html`
-    <link rel="stylesheet" href="../QnA/QnA.css">
+    <style include="QnA-styles"></style>
       <div class="row">
         <div class="col-sm-3 col-sm-offset-4 frame">
           <ul id="MessageList"></ul>
