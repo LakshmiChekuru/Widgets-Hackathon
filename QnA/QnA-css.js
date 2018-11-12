@@ -49,8 +49,8 @@ $_documentContainer.innerHTML = `<dom-module id="QnA-styles">
 		.panel-body
 		{
 			overflow-y: scroll;
-			height: 250px;
 			scrollTop:  scrolled;
+			height:450px;
 		}
 
 		::-webkit-scrollbar-track
@@ -160,13 +160,15 @@ $_documentContainer.innerHTML = `<dom-module id="QnA-styles">
 			  display : table;
 			  border-collapse : seperate;
 			  width:100%;
+			  margin-top : 15px;
+			  margin-left : 15px;
 		  }
 
 		  .input-group .form-control {
 			position: relative;
 			z-index: 2;
 			float: left;
-			width: 80%;
+			width: 65%;
 			margin-bottom: 0;
 			margin-right:15px;
 		  }

@@ -14,7 +14,7 @@ class QnA extends PolymerElement {
       </ul>
     </div>
     <div class="input-group">
-        <input type="text" id="question" class="form-control input-sm" placeholder="How may I help you ?" />
+        <input type="text" id="question" class="form-control input-sm" on-keydown="_handleEvent" placeholder="How may I help you ?" />
         <span class="input-group-btn">
             <button class="btn btn-warning" on-click="_questionButtonClick" id="btn-chat">
                 Send</button>
@@ -55,6 +55,12 @@ class QnA extends PolymerElement {
 
   _init() {
     this._apiUrl = 'https://workspaceqna.azurewebsites.net/qnamaker/knowledgebases/e4099bc6-9135-47d6-bb73-8a348b302ab1/generateAnswer/';
+  }
+
+  _handleEvent(event) {
+    if(event.keyCode == 13) {
+      this._questionButtonClick();
+    }
   }
 
   _questionButtonClick(){
