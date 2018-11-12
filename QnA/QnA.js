@@ -4,35 +4,22 @@ import '../jslibs/ajax/ajax.js';
 
 import './QnA-css';
 
-/**
- * `demo-widget`
- * Getting to know polymer
- *
- * @customElement
- * @polymer
- * @demo demo/index.html
- */
+
 class QnA extends PolymerElement {
   static get template() {
     return html`
     <style include="QnA-styles"></style>
-      <div class="row">
-        <div class="col-sm-3 col-sm-offset-4 frame">
-          <ul id="MessageList"></ul>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-3 col-sm-offset-4 frameinput">
-          <div>
-            <div class="msj-rta macro" style="margin:auto">                        
-                <div class="text text-r" style="background:whitesmoke !important">
-                    <input class="mytext" placeholder="May I help you?" id="question"/>
-                </div> 
-            </div>
-            <input type="button" on-click="_questionButtonClick" value="Send"></input>
-          </div>
-        </div>
-      </div>
+    <div class="panel-body">
+      <ul class="chat" id="MessageList">
+      </ul>
+    </div>
+    <div class="input-group">
+        <input type="text" id="question" class="form-control input-sm" placeholder="How may I help you ?" />
+        <span class="input-group-btn">
+            <button class="btn btn-warning" on-click="_questionButtonClick" id="btn-chat">
+                Send</button>
+        </span>
+    </div>
     `;
   }
   static get properties() {
@@ -73,6 +60,7 @@ class QnA extends PolymerElement {
   _questionButtonClick(){
     this._insertChat("user",this.shadowRoot.querySelector('#question').value,5);
     this._getAnswer(this.shadowRoot.querySelector('#question').value);
+    this.shadowRoot.querySelector('#question').value = "";
   }
   
   _sendRequest(url, urlType, data, header) {
@@ -106,17 +94,6 @@ class QnA extends PolymerElement {
     });
   }
 
-  _formatAMPM(date) {
-    var hours = date.getHours();
-    var minutes = date.getMinutes();
-    var ampm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12;
-    hours = hours ? hours : 12; // the hour '0' should be '12'
-    minutes = minutes < 10 ? '0'+minutes : minutes;
-    var strTime = hours + ':' + minutes + ' ' + ampm;
-    return strTime;
-}  
-
   _getAnswer(question) {
     var url = this._apiUrl;
     var answer="";
@@ -140,44 +117,46 @@ class QnA extends PolymerElement {
   _insertChat(who, text){
     
     var control = '';
-    var date = this._formatAMPM(new Date());
+    
     
     var textnode;
-    // Date Node
-    var smallNode =  document.createElement("small");                   
-    textnode = document.createTextNode(date);
-    smallNode.appendChild(textnode);   
-    var dateNode =  document.createElement("p");                   
-    dateNode.appendChild(smallNode); 
-    // Answer Node
+    // Question or Answer Node
     var answerNode =  document.createElement("p");                   
     textnode = document.createTextNode(text);
-    answerNode.appendChild(textnode);  
+    answerNode.appendChild(textnode); 
     // Wrapper Div Node 
     var answerChildDivNode =  document.createElement("div");
-    answerChildDivNode.setAttribute("class","text text-r"); 
-    answerChildDivNode.appendChild(answerNode);   
+    answerChildDivNode.setAttribute("class","chat-body clearfix"); 
+    
+
+    // Question or Answer Node
+    var listNode = document.createElement("li");
+    var imgSpanNode =  document.createElement("span");                   
+    var imgNode =  document.createElement("img");      
+
+    imgNode.setAttribute("alt","User Avatar"); 
+    imgNode.setAttribute("class","img-circle"); 
+
     if (who == "user"){
-      var replyChildDivNode =  document.createElement("div");
-      replyChildDivNode.setAttribute("class","avatar"); 
-      replyChildDivNode.setAttribute("style","padding:0px 0px 0px 10px !important"); 
-      replyChildDivNode.appendChild(answerChildDivNode); 
-      var answerParentDivNode =  document.createElement("div");
-      answerParentDivNode.setAttribute("class","msj-rta macro"); 
-      answerParentDivNode.appendChild(replyChildDivNode);
+      answerNode.setAttribute("class","user");
+      imgNode.setAttribute("src","http://2.gravatar.com/avatar/81304e8f5a63d0fb806ba18eff525f0f?s=49&d=mm&r=g"); 
+      imgSpanNode.setAttribute("class","chat-img pull-left"); 
+      listNode.setAttribute("class","left clearfix");
     }
     else {
-      var answerParentDivNode =  document.createElement("div");
-      answerParentDivNode.setAttribute("class","msj-rta macro"); 
-      answerParentDivNode.appendChild(answerChildDivNode);
-    }
-      
-    // li Node
-    var node = document.createElement("li");
-    node.setAttribute("width","100%"); 
-    node.appendChild(answerParentDivNode);   
+      answerNode.setAttribute("class","bot");
+      imgNode.setAttribute("src","https://media.giphy.com/media/9m6wVpucHxYg8/giphy.gif");
+      imgSpanNode.setAttribute("class","chat-img pull-right"); 
+      listNode.setAttribute("class","right clearfix"); 
+    }   
 
-    this.shadowRoot.querySelector('#MessageList').appendChild(node);
+    answerChildDivNode.appendChild(answerNode);  
+    imgSpanNode.appendChild(imgNode); 
+
+    listNode.appendChild(imgSpanNode); 
+    listNode.appendChild(answerChildDivNode); 
+
+    this.shadowRoot.querySelector('#MessageList').appendChild(listNode);
   }
 }
 
