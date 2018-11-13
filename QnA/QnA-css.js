@@ -50,7 +50,7 @@ $_documentContainer.innerHTML = `<dom-module id="QnA-styles">
 		{
 			overflow-y: scroll;
 			scrollTop:  scrolled;
-			height:450px;
+			height:350px;
 		}
 
 		::-webkit-scrollbar-track
