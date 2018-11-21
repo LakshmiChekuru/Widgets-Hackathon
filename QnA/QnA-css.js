@@ -45,7 +45,28 @@ $_documentContainer.innerHTML = `<dom-module id="QnA-styles">
 		{
 			margin-right: 5px;
 		}
-
+		.overflow-container {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+	 }
+	 .widget-logo {
+		margin-left: 10px;
+		font-size: 16px !important;
+}
+  
+		widget-header {
+			--header-background-color: #f8f8f8;
+			--header-font-color: #333;
+			logo-background: url('../KYA.JPG');
+			--header-alignment: left;
+			 --header-title: {
+				overflow: hidden;
+			  text-overflow: ellipsis;
+			  padding-left: 10px;
+			}
+			max-width: 100%;				
+		  }
 		.panel-body
 		{
 			overflow-y: scroll;
@@ -154,6 +175,7 @@ $_documentContainer.innerHTML = `<dom-module id="QnA-styles">
 			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffbb450', endColorstr='#fff89406', GradientType=0);
 			filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
 		  }
+		  
 
 		  .input-group {
 			  position : relative;
@@ -172,6 +194,7 @@ $_documentContainer.innerHTML = `<dom-module id="QnA-styles">
 			margin-bottom: 0;
 			margin-right:15px;
 		  }
+		  
 
 		  .input-sm {
 			height: 30px;

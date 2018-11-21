@@ -3,7 +3,9 @@
   "description": "Getting to know polymer",
   "main": "demo-widget.js",
   "dependencies": {
-    "@polymer/polymer": "^3.0.0"
+    "@polymer/paper-progress": "^3.0.1",
+    "@polymer/polymer": "^3.0.0",
+    "promise-polyfill": "8.1.0"
   },
   "devDependencies": {
     "@polymer/iron-demo-helpers": "^3.0.0-pre.19",
