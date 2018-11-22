@@ -17,7 +17,7 @@ class QnA extends PolymerElement {
     return html`
     <style include="shared-styles QnA-styles"></style>
     <widget-header title="[[_title]]" class="overflow-container">
-	<i slot="position-before-title" class="fa fa-history widget-logo"><img src="../KYA.JPG"></img></i>
+	<i slot="position-before-title" class="fa fa-history widget-logo"><img src="./AssetsPortal/img/widgets/qna/ChatIcon.jpeg"></img></i>
 </widget-header>
 
 <paper-progress indeterminate class="slow blue" disabled="{{!_isLoading}}"></paper-progress>
@@ -59,7 +59,7 @@ class QnA extends PolymerElement {
       },
       _title: {
         type: String,
-        value: 'Know your Answer'
+        value: 'ChatBOT'
       },
       _isLoading: {
         type: Boolean,
@@ -151,27 +151,26 @@ class QnA extends PolymerElement {
 
   _insertChat(who, text){
     
-    var control = '';
-    
-    
+    var control = ''; 
     var textnode;
     // Question or Answer Node
     var answerNode =  document.createElement("p");
-    var newRegStr=new RegExp("[[\]]");// /\[.*?\]/g; //new RegExp("\[.*\]\(.*\)");
-    //var newRegStr=new RegExp("[a-zA-Z0-9]([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?([^ ]))");
-    if(newRegStr.test(text)) {
-      var result =newRegStr.exec(text);
-      console.log("has [] in text"+result);
-    }
-    var regExpStr= new RegExp("\(([a-zA-Z0-9]+://)?([a-zA-Z0-9_]+:[a-zA-Z0-9_]+@)?([a-zA-Z0-9.-]+\\.[A-Za-z]{2,4})(:[0-9]+)?([^ ])+(\))$");
-    if(regExpStr.test(text)) {
-        console.log("url inside");
-      var result =regExpStr.exec(text);
-      console.log(text.search(regExpStr));
-  } 
-              
-    textnode = document.createTextNode(text);
-    answerNode.appendChild(textnode); 
+    
+    var pattFull=/\[[\w\s]*\]\((http|https|ftp|ftps|www)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*\))?(\))?/g;
+    var patternLink=/\[[\w\s]*\]/g; 
+    var patternUrl=/\((http|https|ftp|ftps|www)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*\))?(\))?/g;
+    var anchr="";
+    if(pattFull.test(text)) {
+        var fullStr=text.match(pattFull).toString(); //[here](http:)
+        var linkText=fullStr.match(patternLink).toString(); //[here]
+        linkText=linkText.substr(1, linkText.length-2); //here
+        var url=fullStr.match(patternUrl).toString();
+        url=url.substr(1, url.length-2);      
+        anchr='<a target="_blank" href="'+url+'">'+linkText+'</a> ';
+        text= text.replace(fullStr, anchr);      
+    }              
+    
+    answerNode.innerHTML=text; 
     // Wrapper Div Node 
     var answerChildDivNode =  document.createElement("div");
     answerChildDivNode.setAttribute("class","chat-body clearfix"); 
@@ -187,15 +186,13 @@ class QnA extends PolymerElement {
 
     if (who == "user"){
       answerNode.setAttribute("class","user");
-      imgNode.setAttribute("src","../User.png");
-      //imgNode.setAttribute("src","http://2.gravatar.com/avatar/81304e8f5a63d0fb806ba18eff525f0f?s=49&d=mm&r=g"); 
+      imgNode.setAttribute("src","./AssetsPortal/img/widgets/qna/User.png");       
       imgSpanNode.setAttribute("class","chat-img pull-left"); 
       listNode.setAttribute("class","left clearfix");
     }
     else {
       answerNode.setAttribute("class","bot");
-      imgNode.setAttribute("src","../ChatBOT.png");
-      //imgNode.setAttribute("src","https://media.giphy.com/media/9m6wVpucHxYg8/giphy.gif");
+      imgNode.setAttribute("src","./AssetsPortal/img/widgets/qna/BOT.png");      
       imgSpanNode.setAttribute("class","chat-img pull-right"); 
       listNode.setAttribute("class","right clearfix"); 
     }   
@@ -207,6 +204,8 @@ class QnA extends PolymerElement {
     listNode.appendChild(answerChildDivNode); 
 
     this.shadowRoot.querySelector('#MessageList').appendChild(listNode);
+    var chatDIV=this.shadowRoot.querySelector('.panel-body');    
+    chatDIV.scrollTop = chatDIV.scrollHeight;
   }
 }
 

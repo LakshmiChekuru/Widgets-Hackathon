@@ -6,14 +6,15 @@ $_documentContainer.innerHTML = `<dom-module id="QnA-styles">
 		.chat
 		{
 			list-style: none;
-			margin: 0;
+			margin-left: 5px;
+			margin-right: 5px;
 			padding: 0;
 		}
 
 		.chat li
 		{
-			margin-bottom: 10px;
-			padding-bottom: 35px;
+			margin-bottom: 5px;
+			padding-bottom: 25px;
 			border-bottom: 1px dotted #B3A9A9;
 		}
 
@@ -51,7 +52,8 @@ $_documentContainer.innerHTML = `<dom-module id="QnA-styles">
 			text-overflow: ellipsis;
 	 }
 	 .widget-logo {
-		margin-left: 10px;
+		margin-top: 15px;
+		margin-left: 5px;
 		font-size: 16px !important;
 }
   
@@ -69,9 +71,9 @@ $_documentContainer.innerHTML = `<dom-module id="QnA-styles">
 		  }
 		.panel-body
 		{
-			overflow-y: scroll;
-			scrollTop:  scrolled;
-			height:350px;
+			padding-top: 10px;
+			overflow-y: scroll;			
+			height:450px;
 		}
 
 		::-webkit-scrollbar-track
@@ -89,7 +91,8 @@ $_documentContainer.innerHTML = `<dom-module id="QnA-styles">
 		::-webkit-scrollbar-thumb
 		{
 			-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-			background-color: #555;
+			--background-color: #555;
+			background-color: #b0b5bc;
 		}
 
 		.pull-left {
@@ -114,6 +117,7 @@ $_documentContainer.innerHTML = `<dom-module id="QnA-styles">
 			*margin-left: .3em;
 			font-size: 14px;
 			line-height: 20px;
+			--color: #176ab6;
 			color: #333333;
 			text-align: center;
 			text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);
@@ -162,15 +166,16 @@ $_documentContainer.innerHTML = `<dom-module id="QnA-styles">
 		.btn-warning {
 			color: #ffffff;
 			text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-			background-color: #faa732;
+			--background-color: #faa732;
+			background-color: #176ab6;
 			*background-color: #f89406;
-			background-image: -moz-linear-gradient(top, #fbb450, #f89406);
-			background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fbb450), to(#f89406));
-			background-image: -webkit-linear-gradient(top, #fbb450, #f89406);
-			background-image: -o-linear-gradient(top, #fbb450, #f89406);
-			background-image: linear-gradient(to bottom, #fbb450, #f89406);
+			background-image: -moz-linear-gradient(top, #78c1e2, #176ab6);
+			background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#78c1e2), to(#176ab6));
+			background-image: -webkit-linear-gradient(top, #78c1e2, #176ab6);
+			background-image: -o-linear-gradient(top, #78c1e2, #176ab6);
+			background-image: linear-gradient(to bottom, #78c1e2, #176ab6);
 			background-repeat: repeat-x;
-			border-color: #f89406 #f89406 #ad6704;
+			border-color: #176ab6 #176ab6 #ad6704;
 			border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 			filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffbb450', endColorstr='#fff89406', GradientType=0);
 			filter: progid:DXImageTransform.Microsoft.gradient(enabled=false);
@@ -190,7 +195,7 @@ $_documentContainer.innerHTML = `<dom-module id="QnA-styles">
 			position: relative;
 			z-index: 2;
 			float: left;
-			width: 65%;
+			width: 75%;
 			margin-bottom: 0;
 			margin-right:15px;
 		  }

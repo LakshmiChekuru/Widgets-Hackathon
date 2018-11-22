@@ -5,6 +5,7 @@
   "dependencies": {
     "@polymer/paper-progress": "^3.0.1",
     "@polymer/polymer": "^3.0.0",
+    "@polymer/promise-polyfill": "^3.0.0-pre.21",
     "promise-polyfill": "8.1.0"
   },
   "devDependencies": {
